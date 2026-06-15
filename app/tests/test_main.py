@@ -11,6 +11,20 @@ from main import app
 # Create a test client — this simulates HTTP requests without running a server
 client = TestClient(app)
 
+# ■■ Home / Download Tests ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+def test_home_returns_200():
+    """Root endpoint must return a friendly landing page"""
+    response = client.get("/")
+    assert response.status_code == 200
+    assert "AutoDeploy API is live" in response.text
+
+def test_interview_pdf_download_returns_pdf():
+    """Interview PDF endpoint must return the generated PDF asset"""
+    response = client.get("/interview-questions.pdf")
+    assert response.status_code == 200
+    assert response.headers["content-type"] == "application/pdf"
+    assert response.content.startswith(b"%PDF")
+
 # ■■ Health Endpoint Tests ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
 def test_health_returns_200():
     """Health endpoint must return HTTP 200 OK"""

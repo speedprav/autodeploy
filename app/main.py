@@ -1,9 +1,15 @@
 from fastapi import FastAPI, HTTPException
+from fastapi.responses import FileResponse, HTMLResponse
 from pydantic import BaseModel
 from datetime import datetime
+from pathlib import Path
 import uvicorn
 import random
 from prometheus_fastapi_instrumentator import Instrumentator
+
+BASE_DIR = Path(__file__).resolve().parent
+STATIC_DIR = BASE_DIR / "static"
+INTERVIEW_PDF = STATIC_DIR / "autodeploy_interview_questions_answers.pdf"
 
 # Initialize the FastAPI application
 app = FastAPI(
@@ -42,6 +48,38 @@ class PredictResponse(BaseModel):
 
 # ■■ Endpoints ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
 
+@app.get("/", response_class=HTMLResponse)
+def home():
+    """Render-friendly landing page with links to the portfolio API assets."""
+    return """
+    <!doctype html>
+    <html lang="en">
+      <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>AutoDeploy API</title>
+        <style>
+          body { font-family: Arial, sans-serif; margin: 2rem; line-height: 1.5; color: #17202a; }
+          main { max-width: 760px; margin: 0 auto; }
+          a { color: #0b5cad; font-weight: 700; }
+          li { margin: 0.45rem 0; }
+        </style>
+      </head>
+      <body>
+        <main>
+          <h1>AutoDeploy API is live</h1>
+          <p>Production CI/CD portfolio API built with FastAPI, Docker, Kubernetes, Prometheus, and Grafana.</p>
+          <ul>
+            <li><a href="/health">Health check</a></li>
+            <li><a href="/info">Project info</a></li>
+            <li><a href="/docs">Swagger API docs</a></li>
+            <li><a href="/interview-questions.pdf">Interview questions and answers PDF</a></li>
+          </ul>
+        </main>
+      </body>
+    </html>
+    """
+
 @app.get("/health")
 def health_check():
     """
@@ -71,6 +109,18 @@ def get_info():
             "GitHub Actions", "Prometheus", "Grafana"
         ]
     }
+
+@app.get("/interview-questions.pdf")
+def download_interview_questions():
+    """Download the interview preparation PDF."""
+    if not INTERVIEW_PDF.exists():
+        raise HTTPException(status_code=404, detail="Interview PDF is not available")
+
+    return FileResponse(
+        INTERVIEW_PDF,
+        media_type="application/pdf",
+        filename="autodeploy_interview_questions_answers.pdf",
+    )
 
 @app.post("/predict", response_model=PredictResponse)
 def predict(request: PredictRequest):

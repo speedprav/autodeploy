@@ -35,13 +35,13 @@ USER appuser
 # Add local Python packages to PATH
 ENV PATH=/home/appuser/.local/bin:$PATH
 
-# Expose port 8000 (FastAPI default)
+# Expose port 8000 for local Docker runs. Hosted platforms like Render inject PORT.
 EXPOSE 8000
 
 # Health check — Docker will run this every 30s to verify the container is healthy
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-    CMD python -c "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"
+    CMD-SHELL python -c "import os, urllib.request; urllib.request.urlopen(f'http://localhost:{os.environ.get(\"PORT\", \"8000\")}/health')"
 
 # Start the application
 # --host 0.0.0.0 makes it accessible from outside the container
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD uvicorn main:app --host 0.0.0.0 --port ${PORT:-8000}

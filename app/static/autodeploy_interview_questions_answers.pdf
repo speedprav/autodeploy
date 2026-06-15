@@ -1,0 +1,256 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R 5 0 R] /Count 2 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica >> >> >> /Contents 4 0 R >>
+endobj
+4 0 obj
+<< /Length 3001 >>
+stream
+BT
+/F1 12 Tf
+50 760 Td
+/F1 20 Tf
+(AutoDeploy Interview Questions and Answers) Tj
+50 732 Td
+/F1 11 Tf
+(FastAPI, Docker, Kubernetes, CI/CD, Prometheus, and Grafana) Tj
+50 712 Td
+/F1 10 Tf
+() Tj
+50 690 Td
+/F1 14 Tf
+(Project Overview) Tj
+50 672 Td
+/F1 11 Tf
+(Q: What problem does AutoDeploy solve?) Tj
+50 658 Td
+/F1 10 Tf
+(A: AutoDeploy demonstrates a production-style delivery pipeline for a FastAPI service.) Tj
+50 644 Td
+/F1 10 Tf
+(It shows how code can be tested, containerized, deployed, monitored, and rolled back) Tj
+50 630 Td
+/F1 10 Tf
+(using common DevOps tools.) Tj
+50 620 Td
+/F1 10 Tf
+() Tj
+50 602 Td
+/F1 11 Tf
+(Q: How would you explain the architecture in one minute?) Tj
+50 588 Td
+/F1 10 Tf
+(A: A developer pushes code to GitHub. GitHub Actions runs tests, builds a Docker image,) Tj
+50 574 Td
+/F1 10 Tf
+(pushes it to a registry, and updates a Kubernetes deployment. Kubernetes runs multiple) Tj
+50 560 Td
+/F1 10 Tf
+(replicas, while Prometheus and Grafana provide metrics and dashboards.) Tj
+50 550 Td
+/F1 10 Tf
+() Tj
+50 532 Td
+/F1 11 Tf
+(Q: Why did you choose FastAPI?) Tj
+50 518 Td
+/F1 10 Tf
+(A: FastAPI is lightweight, fast, easy to document with OpenAPI, and a good fit for API-) Tj
+50 504 Td
+/F1 10 Tf
+(first services. It also makes validation simple through Pydantic models.) Tj
+50 494 Td
+/F1 10 Tf
+() Tj
+50 472 Td
+/F1 14 Tf
+(CI/CD) Tj
+50 454 Td
+/F1 11 Tf
+(Q: What happens when a pull request or push is made?) Tj
+50 440 Td
+/F1 10 Tf
+(A: The pipeline installs dependencies, runs pytest, builds the Docker image, pushes) Tj
+50 426 Td
+/F1 10 Tf
+(versioned tags, and deploys the new image when the checks pass.) Tj
+50 416 Td
+/F1 10 Tf
+() Tj
+50 398 Td
+/F1 11 Tf
+(Q: Why should tests run before Docker build and deploy?) Tj
+50 384 Td
+/F1 10 Tf
+(A: Tests catch regressions early. If tests fail, the pipeline stops before publishing or) Tj
+50 370 Td
+/F1 10 Tf
+(deploying a broken image.) Tj
+50 360 Td
+/F1 10 Tf
+() Tj
+50 342 Td
+/F1 11 Tf
+(Q: How do you make deployments traceable?) Tj
+50 328 Td
+/F1 10 Tf
+(A: Tag images with both latest and the commit SHA. The SHA tag links a running container) Tj
+50 314 Td
+/F1 10 Tf
+(back to the exact source version.) Tj
+50 304 Td
+/F1 10 Tf
+() Tj
+50 282 Td
+/F1 14 Tf
+(Docker) Tj
+50 264 Td
+/F1 11 Tf
+(Q: Why use a multi-stage Dockerfile?) Tj
+50 250 Td
+/F1 10 Tf
+(A: It keeps the final image smaller and cleaner by separating dependency installation) Tj
+50 236 Td
+/F1 10 Tf
+(from the runtime image.) Tj
+50 226 Td
+/F1 10 Tf
+() Tj
+50 208 Td
+/F1 11 Tf
+(Q: Why run the container as a non-root user?) Tj
+50 194 Td
+/F1 10 Tf
+(A: It reduces the impact of a container compromise because the process has fewer) Tj
+50 180 Td
+/F1 10 Tf
+(privileges inside the container.) Tj
+50 170 Td
+/F1 10 Tf
+() Tj
+50 152 Td
+/F1 11 Tf
+(Q: Why should cloud platforms use a dynamic port?) Tj
+50 138 Td
+/F1 10 Tf
+(A: Platforms like Render provide the port through an environment variable. Binding only) Tj
+50 124 Td
+/F1 10 Tf
+(to a hard-coded port can make the service unreachable.) Tj
+ET
+endstream
+endobj
+5 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica >> >> >> /Contents 6 0 R >>
+endobj
+6 0 obj
+<< /Length 1814 >>
+stream
+BT
+/F1 12 Tf
+50 760 Td
+/F1 14 Tf
+(AutoDeploy Interview Questions and Answers) Tj
+50 750 Td
+/F1 10 Tf
+() Tj
+50 728 Td
+/F1 14 Tf
+(Kubernetes) Tj
+50 710 Td
+/F1 11 Tf
+(Q: What is the purpose of a Kubernetes Deployment?) Tj
+50 696 Td
+/F1 10 Tf
+(A: A Deployment manages replicas, rollout strategy, self-healing, and updates for) Tj
+50 682 Td
+/F1 10 Tf
+(application pods.) Tj
+50 672 Td
+/F1 10 Tf
+() Tj
+50 654 Td
+/F1 11 Tf
+(Q: What is the difference between liveness and readiness probes?) Tj
+50 640 Td
+/F1 10 Tf
+(A: Liveness checks whether a container should be restarted. Readiness checks whether a) Tj
+50 626 Td
+/F1 10 Tf
+(pod should receive traffic.) Tj
+50 616 Td
+/F1 10 Tf
+() Tj
+50 598 Td
+/F1 11 Tf
+(Q: How does Kubernetes support zero-downtime deployment?) Tj
+50 584 Td
+/F1 10 Tf
+(A: Rolling updates replace old pods gradually while keeping enough healthy replicas) Tj
+50 570 Td
+/F1 10 Tf
+(available to serve traffic.) Tj
+50 560 Td
+/F1 10 Tf
+() Tj
+50 538 Td
+/F1 14 Tf
+(Monitoring) Tj
+50 520 Td
+/F1 11 Tf
+(Q: What does Prometheus collect from this app?) Tj
+50 506 Td
+/F1 10 Tf
+(A: It scrapes HTTP metrics such as request count, request duration, status codes, and) Tj
+50 492 Td
+/F1 10 Tf
+(in-progress requests from the metrics endpoint.) Tj
+50 482 Td
+/F1 10 Tf
+() Tj
+50 464 Td
+/F1 11 Tf
+(Q: What would you monitor first in production?) Tj
+50 450 Td
+/F1 10 Tf
+(A: Request rate, error rate, latency percentiles, CPU, memory, pod restarts, and) Tj
+50 436 Td
+/F1 10 Tf
+(deployment rollout status.) Tj
+50 426 Td
+/F1 10 Tf
+() Tj
+50 408 Td
+/F1 11 Tf
+(Q: How would you investigate a sudden spike in errors?) Tj
+50 394 Td
+/F1 10 Tf
+(A: Check recent deployments, inspect logs, compare error rate and latency graphs, and) Tj
+50 380 Td
+/F1 10 Tf
+(roll back if the new release is the likely cause.) Tj
+50 370 Td
+/F1 10 Tf
+() Tj
+ET
+endstream
+endobj
+xref
+0 7
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000121 00000 n 
+0000000296 00000 n 
+0000003349 00000 n 
+0000003524 00000 n 
+trailer
+<< /Size 7 /Root 1 0 R >>
+startxref
+5390
+%%EOF
