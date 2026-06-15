@@ -1,6 +1,6 @@
-# AutoDeploy Documentation Index
+# PDeploy Documentation Index
 
-Complete documentation for the AutoDeploy CI/CD pipeline project.
+Complete documentation for the PDeploy CI/CD pipeline project.
 
 ---
 
@@ -165,7 +165,7 @@ Covers:
 
 ### Path 1: User (Just want to use the API)
 1. Start: [API.md](API.md)
-2. Try: http://localhost:8000/docs (local) or https://autodeploy-w7mg.onrender.com/docs (live)
+2. Try: http://localhost:8000/docs (local) or https://pdeploy-w7mg.onrender.com/docs (live)
 3. Reference: Code examples in [API.md](API.md)
 
 ### Path 2: Developer (Setup locally)
@@ -311,7 +311,7 @@ In the main project directory:
    - Use browser find (Ctrl+F) to search within docs
 
 2. **GitHub Issues**
-   - https://github.com/speedprav/autodeploy/issues
+   - https://github.com/speedprav/pdeploy/issues
    - Search existing issues first
 
 3. **Troubleshooting**
@@ -320,7 +320,7 @@ In the main project directory:
 
 4. **API Testing**
    - http://localhost:8000/docs (local)
-   - https://autodeploy-w7mg.onrender.com/docs (live)
+   - https://pdeploy-w7mg.onrender.com/docs (live)
    - Interactive Swagger UI
 
 ---

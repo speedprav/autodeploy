@@ -1,12 +1,12 @@
 # Deployment Guide
 
-Deploy AutoDeploy to production using various platforms.
+Deploy PDeploy to production using various platforms.
 
 ---
 
 ## Quick Deploy (Render.com) ✓ Deployed
 
-**Live URL:** https://autodeploy-w7mg.onrender.com
+**Live URL:** https://pdeploy-w7mg.onrender.com
 
 ### Steps
 
@@ -18,9 +18,9 @@ Deploy AutoDeploy to production using various platforms.
 
 3. **Create Web Service**
    - New → Web Service
-   - Select `speedprav/autodeploy` repo
+   - Select `speedprav/pdeploy` repo
    - Configure:
-     - **Name:** `autodeploy`
+     - **Name:** `pdeploy`
      - **Region:** `Ohio` (or closest)
      - **Branch:** `main`
      - **Build command:** `pip install -r app/requirements.txt`
@@ -33,7 +33,7 @@ Deploy AutoDeploy to production using various platforms.
 
 5. **Test**
    ```bash
-   curl https://autodeploy-xxxxx.onrender.com/health
+   curl https://pdeploy-xxxxx.onrender.com/health
    ```
 
 ### Pros & Cons
@@ -70,7 +70,7 @@ Deploy AutoDeploy to production using various platforms.
      - Version: Latest stable
      - Nodes: 2 (1-node minimum)
      - Datacenter: Closest to you
-     - Name: `autodeploy-cluster`
+     - Name: `pdeploy-cluster`
    - Cost: ~$6-12/month
 
 2. **Download kubeconfig**
@@ -99,7 +99,7 @@ Deploy AutoDeploy to production using various platforms.
 5. **Deploy application**
    ```bash
    # Update image in deployment.yaml
-   # Change: image: YOUR_USERNAME/autodeploy:latest
+   # Change: image: YOUR_USERNAME/pdeploy:latest
    
    kubectl apply -f k8s/deployment.yaml
    kubectl apply -f k8s/service.yaml
@@ -127,7 +127,7 @@ Deploy AutoDeploy to production using various platforms.
 
 1. **Create GCP Project**
    - Go to: https://console.cloud.google.com
-   - Create Project → Name: `autodeploy`
+   - Create Project → Name: `pdeploy`
 
 2. **Enable Kubernetes API**
    ```bash
@@ -136,7 +136,7 @@ Deploy AutoDeploy to production using various platforms.
 
 3. **Create GKE Cluster**
    ```bash
-   gcloud container clusters create autodeploy-cluster \
+   gcloud container clusters create pdeploy-cluster \
      --zone us-central1-a \
      --num-nodes 1 \
      --machine-type n1-standard-1
@@ -144,7 +144,7 @@ Deploy AutoDeploy to production using various platforms.
 
 4. **Get credentials**
    ```bash
-   gcloud container clusters get-credentials autodeploy-cluster \
+   gcloud container clusters get-credentials pdeploy-cluster \
      --zone us-central1-a
    ```
 
@@ -178,17 +178,17 @@ Deploy AutoDeploy to production using various platforms.
 ```bash
 # 1. Create EKS cluster
 aws eks create-cluster \
-  --name autodeploy-cluster \
+  --name pdeploy-cluster \
   --version 1.28 \
   --role-arn arn:aws:iam::ACCOUNT_ID:role/eks-service-role \
   --resources-vpc-config subnetIds=subnet-xxxxx,subnet-xxxxx
 
 # 2. Get kubeconfig
-aws eks update-kubeconfig --name autodeploy-cluster --region us-east-1
+aws eks update-kubeconfig --name pdeploy-cluster --region us-east-1
 
 # 3. Create worker nodes
 aws cloudformation create-stack \
-  --stack-name autodeploy-nodes \
+  --stack-name pdeploy-nodes \
   --template-url https://amazon-eks.s3.us-west-2.amazonaws.com/cloudformation/2020-10-01/amazon-eks-nodegroup.yaml
 
 # 4. Deploy
@@ -208,26 +208,26 @@ kubectl apply -f k8s/deployment.yaml
 
 1. **Create Helm chart**
    ```bash
-   helm create autodeploy-chart
+   helm create pdeploy-chart
    ```
 
 2. **Update values**
    ```bash
-   # Edit autodeploy-chart/values.yaml
+   # Edit pdeploy-chart/values.yaml
    image:
-     repository: speedprav/autodeploy
+     repository: speedprav/pdeploy
      tag: latest
    replicas: 2
    ```
 
 3. **Deploy**
    ```bash
-   helm install autodeploy ./autodeploy-chart
+   helm install pdeploy ./pdeploy-chart
    ```
 
 4. **Upgrade**
    ```bash
-   helm upgrade autodeploy ./autodeploy-chart
+   helm upgrade pdeploy ./pdeploy-chart
    ```
 
 ---
@@ -246,12 +246,12 @@ kubectl apply -f k8s/deployment.yaml
    apiVersion: argoproj.io/v1alpha1
    kind: Application
    metadata:
-     name: autodeploy
+     name: pdeploy
      namespace: argocd
    spec:
      project: default
      source:
-       repoURL: https://github.com/speedprav/autodeploy
+       repoURL: https://github.com/speedprav/pdeploy
        targetRevision: main
        path: k8s
      destination:
@@ -284,10 +284,10 @@ helm install prometheus prometheus-community/kube-prometheus-stack \
 apiVersion: monitoring.coreos.com/v1
 kind: PrometheusRule
 metadata:
-  name: autodeploy-alerts
+  name: pdeploy-alerts
 spec:
   groups:
-  - name: autodeploy
+  - name: pdeploy
     rules:
     - alert: HighErrorRate
       expr: rate(http_requests_total{status=~"5.."}[5m]) > 0.05
@@ -333,7 +333,7 @@ spec:
 EOF
 
 # Update Ingress
-kubectl annotate ingress autodeploy-ingress cert-manager.io/cluster-issuer=letsencrypt-prod
+kubectl annotate ingress pdeploy-ingress cert-manager.io/cluster-issuer=letsencrypt-prod
 ```
 
 ---
@@ -346,12 +346,12 @@ kubectl annotate ingress autodeploy-ingress cert-manager.io/cluster-issuer=letse
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: autodeploy-hpa
+  name: pdeploy-hpa
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: autodeploy
+    name: pdeploy
   minReplicas: 2
   maxReplicas: 10
   metrics:
@@ -385,7 +385,7 @@ kubectl get hpa --watch
 kubectl get all --all-namespaces -o yaml > cluster-backup.yaml
 
 # Backup specific resource
-kubectl get deployment autodeploy -o yaml > deployment-backup.yaml
+kubectl get deployment pdeploy -o yaml > deployment-backup.yaml
 ```
 
 ### Restore
@@ -402,7 +402,7 @@ kubectl apply -f - <<EOF
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: autodeploy-data
+  name: pdeploy-data
 spec:
   accessModes:
     - ReadWriteOnce
@@ -415,7 +415,7 @@ EOF
 volumes:
 - name: data
   persistentVolumeClaim:
-    claimName: autodeploy-data
+    claimName: pdeploy-data
 ```
 
 ---
@@ -455,7 +455,7 @@ kubectl describe pod <pod-name>
 kubectl logs <pod-name> --previous
 
 # Check probe configuration
-kubectl get deployment autodeploy -o yaml | grep -A 10 livenessProbe
+kubectl get deployment pdeploy -o yaml | grep -A 10 livenessProbe
 ```
 
 **ImagePullBackOff**
@@ -510,7 +510,7 @@ curl https://backup-url/health
 apt-get install apache2-utils
 
 # Run load test (1000 requests, 10 concurrent)
-ab -n 1000 -c 10 https://autodeploy-w7mg.onrender.com/health
+ab -n 1000 -c 10 https://pdeploy-w7mg.onrender.com/health
 ```
 
 ### Resource Optimization
@@ -521,7 +521,7 @@ kubectl top pods
 kubectl top nodes
 
 # Adjust resource limits if needed
-kubectl set resources deployment autodeploy --limits=cpu=500m,memory=512Mi
+kubectl set resources deployment pdeploy --limits=cpu=500m,memory=512Mi
 ```
 
 ---

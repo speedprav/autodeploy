@@ -1,6 +1,6 @@
 # Contributing Guide
 
-Thank you for interest in contributing to AutoDeploy! This document explains how to contribute code, report issues, and suggest improvements.
+Thank you for interest in contributing to PDeploy! This document explains how to contribute code, report issues, and suggest improvements.
 
 ---
 
@@ -17,8 +17,8 @@ Be respectful, inclusive, and constructive. Treat all contributors with kindness
 ```bash
 # On GitHub, click "Fork" button
 # Then clone your fork
-git clone https://github.com/YOUR_USERNAME/autodeploy.git
-cd autodeploy
+git clone https://github.com/YOUR_USERNAME/pdeploy.git
+cd pdeploy
 ```
 
 ### 2. Create Feature Branch
@@ -309,8 +309,8 @@ pytest -x
 
 1. Build locally:
    ```bash
-   docker build -t autodeploy:test .
-   docker run -p 8000:8000 autodeploy:test
+   docker build -t pdeploy:test .
+   docker run -p 8000:8000 pdeploy:test
    ```
 
 2. Test container:
@@ -528,4 +528,4 @@ Contributors will be:
 
 ---
 
-Thank you for making AutoDeploy better! 🎉
+Thank you for making PDeploy better! 🎉

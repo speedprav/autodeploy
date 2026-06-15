@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import HTMLResponse
 from pydantic import BaseModel
 from datetime import datetime
@@ -8,9 +8,11 @@ from prometheus_fastapi_instrumentator import Instrumentator
 
 # Initialize the FastAPI application
 app = FastAPI(
-    title="AutoDeploy API",
+    title="PDeploy API",
     description="Production CI/CD demo app for DevOps portfolio",
-    version="1.0.0"
+    version="1.0.0",
+    docs_url=None,
+    redoc_url=None,
 )
 
 # Add Prometheus metrics collection
@@ -43,6 +45,211 @@ class PredictResponse(BaseModel):
 
 # ■■ Endpoints ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
 
+def wants_html(request: Request) -> bool:
+    """Return polished pages in browsers while keeping JSON for API clients."""
+    accept = request.headers.get("accept", "")
+    return "text/html" in accept and "application/json" not in accept
+
+
+def page_shell(title: str, eyebrow: str, body: str) -> str:
+    return f"""
+    <!doctype html>
+    <html lang="en">
+      <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>{title}</title>
+        <style>
+          :root {{
+            color-scheme: light;
+            --bg: #f5f7fb;
+            --panel: #ffffff;
+            --ink: #162033;
+            --muted: #64748b;
+            --line: #d9e1ec;
+            --blue: #1557d8;
+            --green: #17835d;
+            --violet: #6d45c7;
+          }}
+          * {{ box-sizing: border-box; }}
+          body {{
+            margin: 0;
+            font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            color: var(--ink);
+            background:
+              linear-gradient(180deg, #edf4ff 0, rgba(237, 244, 255, 0) 360px),
+              var(--bg);
+            line-height: 1.5;
+          }}
+          a {{ color: inherit; }}
+          main {{
+            width: min(1120px, calc(100% - 32px));
+            margin: 0 auto;
+            padding: 30px 0 44px;
+          }}
+          .nav {{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 34px;
+          }}
+          .brand {{
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 900;
+          }}
+          .mark {{
+            display: grid;
+            place-items: center;
+            width: 42px;
+            height: 42px;
+            border-radius: 8px;
+            color: #fff;
+            background: #111827;
+          }}
+          .links {{
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+          }}
+          .links a, .button {{
+            min-height: 40px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 13px;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            background: #fff;
+            text-decoration: none;
+            font-weight: 800;
+          }}
+          .hero {{
+            display: grid;
+            grid-template-columns: minmax(0, 1.1fr) minmax(280px, 0.9fr);
+            gap: 26px;
+            align-items: stretch;
+          }}
+          .hero-copy {{
+            padding: 30px 0;
+          }}
+          .eyebrow {{
+            margin: 0 0 12px;
+            color: var(--blue);
+            font-size: 0.8rem;
+            font-weight: 900;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+          }}
+          h1 {{
+            margin: 0;
+            font-size: clamp(2.25rem, 6vw, 4.6rem);
+            line-height: 0.98;
+            letter-spacing: 0;
+          }}
+          .lead {{
+            margin: 20px 0 0;
+            max-width: 650px;
+            color: #475569;
+            font-size: 1.08rem;
+          }}
+          .panel {{
+            padding: 22px;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            background: var(--panel);
+            box-shadow: 0 18px 48px rgba(15, 23, 42, 0.08);
+          }}
+          .grid {{
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-top: 26px;
+          }}
+          .tile {{
+            padding: 20px;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            background: #fff;
+          }}
+          .tile h2, .panel h2 {{
+            margin: 0 0 8px;
+            font-size: 1rem;
+          }}
+          .tile p, .panel p {{
+            margin: 0;
+            color: var(--muted);
+          }}
+          .metric {{
+            display: flex;
+            justify-content: space-between;
+            gap: 18px;
+            padding: 14px 0;
+            border-top: 1px solid #edf1f6;
+          }}
+          .metric:first-of-type {{ border-top: 0; }}
+          .metric strong {{ font-size: 0.92rem; }}
+          .metric span {{ color: var(--muted); text-align: right; overflow-wrap: anywhere; }}
+          .ok {{
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 11px;
+            border-radius: 999px;
+            color: var(--green);
+            background: rgba(23, 131, 93, 0.09);
+            font-weight: 900;
+          }}
+          .ok::before {{
+            content: "";
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--green);
+          }}
+          pre {{
+            margin: 16px 0 0;
+            padding: 16px;
+            border-radius: 8px;
+            overflow: auto;
+            color: #dbeafe;
+            background: #111827;
+          }}
+          @media (max-width: 820px) {{
+            .hero, .grid {{ grid-template-columns: 1fr; }}
+            .nav {{ align-items: flex-start; flex-direction: column; }}
+          }}
+        </style>
+      </head>
+      <body>
+        <main>
+          <nav class="nav" aria-label="Primary navigation">
+            <a class="brand" href="/">
+              <span class="mark">PD</span>
+              <span>PDeploy</span>
+            </a>
+            <div class="links">
+              <a href="/health">Health</a>
+              <a href="/info">Info</a>
+              <a href="/docs">Docs</a>
+            </div>
+          </nav>
+          <section class="hero">
+            <div class="hero-copy">
+              <p class="eyebrow">{eyebrow}</p>
+              <h1>{title}</h1>
+            </div>
+            <aside class="panel">
+              {body}
+            </aside>
+          </section>
+        </main>
+      </body>
+    </html>
+    """
+
 @app.get("/", response_class=HTMLResponse)
 def home():
     """Render-friendly landing page for the portfolio API."""
@@ -52,7 +259,7 @@ def home():
       <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>AutoDeploy API</title>
+        <title>PDeploy API</title>
         <style>
           :root {
             color-scheme: light;
@@ -301,8 +508,8 @@ def home():
         <main>
           <header class="topbar">
             <div class="brand">
-              <div class="mark">AD</div>
-              <span>AutoDeploy</span>
+              <div class="mark">PD</div>
+              <span>PDeploy</span>
             </div>
             <div class="status">Live on Render</div>
           </header>
@@ -377,25 +584,43 @@ def home():
     """
 
 @app.get("/health")
-def health_check():
+def health_check(request: Request):
     """
     Health check endpoint — Kubernetes uses this to verify the app is alive.
     Returns: status and current UTC timestamp
     """
-    return {
+    data = {
         "status": "healthy",
         "timestamp": datetime.utcnow().isoformat(),
-        "service": "autodeploy-api"
+        "service": "pdeploy-api"
     }
 
+    if wants_html(request):
+        return HTMLResponse(page_shell(
+            "PDeploy Health",
+            "Runtime status",
+            f"""
+              <h2>Service Check</h2>
+              <p class="ok">Healthy</p>
+              <div style="margin-top: 18px">
+                <div class="metric"><strong>Status</strong><span>{data["status"]}</span></div>
+                <div class="metric"><strong>Service</strong><span>{data["service"]}</span></div>
+                <div class="metric"><strong>Timestamp</strong><span>{data["timestamp"]}</span></div>
+              </div>
+              <pre>{data}</pre>
+            """
+        ))
+
+    return data
+
 @app.get("/info")
-def get_info():
+def get_info(request: Request):
     """
     Application metadata endpoint.
     Returns: project details and author information
     """
-    return {
-        "project": "AutoDeploy",
+    data = {
+        "project": "PDeploy",
         "version": "1.0.0",
         "author": "Pravinkumar Choudhary",
         "github": "github.com/speedprav",
@@ -405,6 +630,164 @@ def get_info():
             "GitHub Actions", "Prometheus", "Grafana"
         ]
     }
+
+    if wants_html(request):
+        tech = "".join(f"<span>{item}</span>" for item in data["tech_stack"])
+        return HTMLResponse(page_shell(
+            "PDeploy Info",
+            "Project profile",
+            f"""
+              <h2>{data["project"]}</h2>
+              <p>{data["description"]}</p>
+              <div style="margin-top: 18px">
+                <div class="metric"><strong>Version</strong><span>{data["version"]}</span></div>
+                <div class="metric"><strong>Author</strong><span>{data["author"]}</span></div>
+                <div class="metric"><strong>GitHub</strong><span>{data["github"]}</span></div>
+              </div>
+              <div class="grid" style="grid-template-columns: repeat(2, minmax(0, 1fr)); margin-top: 18px">
+                <div class="tile"><h2>Delivery</h2><p>Container build, deploy workflow, and health probes.</p></div>
+                <div class="tile"><h2>Monitoring</h2><p>Prometheus metrics endpoint for operational visibility.</p></div>
+              </div>
+              <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px">{tech}</div>
+            """
+        ))
+
+    return data
+
+@app.get("/docs", include_in_schema=False)
+def custom_swagger_ui():
+    return HTMLResponse(f"""
+    <!doctype html>
+    <html lang="en">
+      <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>PDeploy API Docs</title>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swagger-ui-dist@5/swagger-ui.css">
+        <style>
+          body {{
+            margin: 0;
+            background: #f5f7fb;
+            color: #162033;
+            font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+          }}
+          .docs-header {{
+            padding: 24px min(32px, 5vw);
+            border-bottom: 1px solid #d9e1ec;
+            background: linear-gradient(135deg, #ffffff 0, #edf4ff 100%);
+          }}
+          .docs-nav {{
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            max-width: 1180px;
+            margin: 0 auto 24px;
+          }}
+          .brand {{
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            color: #162033;
+            text-decoration: none;
+            font-weight: 900;
+          }}
+          .mark {{
+            display: grid;
+            place-items: center;
+            width: 42px;
+            height: 42px;
+            border-radius: 8px;
+            color: #fff;
+            background: #111827;
+          }}
+          .links {{
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+          }}
+          .links a {{
+            min-height: 40px;
+            display: inline-flex;
+            align-items: center;
+            padding: 0 13px;
+            border: 1px solid #d9e1ec;
+            border-radius: 8px;
+            color: #162033;
+            background: #fff;
+            text-decoration: none;
+            font-weight: 800;
+          }}
+          .docs-hero {{
+            max-width: 1180px;
+            margin: 0 auto;
+          }}
+          .docs-hero p {{
+            max-width: 680px;
+            margin: 14px 0 0;
+            color: #64748b;
+            font-size: 1.05rem;
+          }}
+          h1 {{
+            margin: 0;
+            font-size: clamp(2rem, 5vw, 4.4rem);
+            line-height: 1;
+            letter-spacing: 0;
+          }}
+          #swagger-ui {{
+            max-width: 1180px;
+            margin: 24px auto 44px;
+            padding: 0 min(20px, 4vw);
+          }}
+          .swagger-ui .topbar {{ display: none; }}
+          .swagger-ui .scheme-container,
+          .swagger-ui .opblock,
+          .swagger-ui .info {{
+            border-radius: 8px;
+            box-shadow: none;
+          }}
+          .swagger-ui .info {{ margin: 24px 0; }}
+          .swagger-ui .info .title {{ color: #162033; }}
+          @media (max-width: 700px) {{
+            .docs-nav {{ align-items: flex-start; flex-direction: column; }}
+          }}
+        </style>
+      </head>
+      <body>
+        <header class="docs-header">
+          <nav class="docs-nav">
+            <a class="brand" href="/">
+              <span class="mark">PD</span>
+              <span>PDeploy</span>
+            </a>
+            <div class="links">
+              <a href="/">Home</a>
+              <a href="/health">Health</a>
+              <a href="/info">Info</a>
+            </div>
+          </nav>
+          <div class="docs-hero">
+            <h1>PDeploy API Docs</h1>
+            <p>Explore the production API contract, test requests, inspect schemas, and validate responses from one clean developer surface.</p>
+          </div>
+        </header>
+        <div id="swagger-ui"></div>
+        <script src="https://cdn.jsdelivr.net/npm/swagger-ui-dist@5/swagger-ui-bundle.js"></script>
+        <script>
+          window.ui = SwaggerUIBundle({{
+            url: "{app.openapi_url}",
+            dom_id: "#swagger-ui",
+            deepLinking: true,
+            displayRequestDuration: true,
+            filter: true,
+            defaultModelsExpandDepth: -1,
+            presets: [SwaggerUIBundle.presets.apis],
+            layout: "BaseLayout"
+          }});
+        </script>
+      </body>
+    </html>
+    """)
 
 @app.post("/predict", response_model=PredictResponse)
 def predict(request: PredictRequest):

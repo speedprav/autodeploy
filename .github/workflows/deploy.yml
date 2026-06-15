@@ -1,4 +1,4 @@
-name: AutoDeploy CI/CD Pipeline
+name: PDeploy CI/CD Pipeline
 
 # ■■ Trigger ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
 on:
@@ -9,8 +9,8 @@ on:
 
 # ■■ Environment Variables ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
 env:
-  DOCKER_IMAGE: ${{ secrets.DOCKERHUB_USERNAME }}/autodeploy
-  DEPLOYMENT_NAME: autodeploy
+  DOCKER_IMAGE: ${{ secrets.DOCKERHUB_USERNAME }}/pdeploy
+  DEPLOYMENT_NAME: pdeploy
 
 # ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
 # JOB 1: TEST

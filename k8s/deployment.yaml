@@ -1,14 +1,14 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: autodeploy # Name of this deployment
+  name: pdeploy # Name of this deployment
   labels:
-    app: autodeploy # Label used to identify related resources
+    app: pdeploy # Label used to identify related resources
 spec:
   replicas: 2 # Run 2 identical pods for high availability
   selector:
     matchLabels:
-      app: autodeploy # This deployment manages pods with this label
+      app: pdeploy # This deployment manages pods with this label
   strategy:
     type: RollingUpdate # Update pods one at a time (zero downtime)
     rollingUpdate:
@@ -17,11 +17,11 @@ spec:
   template:
     metadata:
       labels:
-        app: autodeploy # Pods get this label
+        app: pdeploy # Pods get this label
     spec:
       containers:
-      - name: autodeploy
-        image: YOUR_DOCKERHUB_USERNAME/autodeploy:latest
+      - name: pdeploy
+        image: YOUR_DOCKERHUB_USERNAME/pdeploy:latest
         imagePullPolicy: Always # Always pull latest image
         ports:
         - containerPort: 8000 # Port your FastAPI app listens on

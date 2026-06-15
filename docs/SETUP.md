@@ -14,8 +14,8 @@
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/speedprav/autodeploy.git
-cd autodeploy
+git clone https://github.com/speedprav/pdeploy.git
+cd pdeploy
 ```
 
 ### 2. Create Virtual Environment
@@ -105,18 +105,18 @@ INFO:     Application startup complete.
 
 ```bash
 # From project root directory
-docker build -t autodeploy:latest .
+docker build -t pdeploy:latest .
 ```
 
 ### Run Docker Container
 
 ```bash
-docker run -p 8000:8000 autodeploy:latest
+docker run -p 8000:8000 pdeploy:latest
 ```
 
 **Or with environment variable:**
 ```bash
-docker run -p 8000:8000 -e ENV=production autodeploy:latest
+docker run -p 8000:8000 -e ENV=production pdeploy:latest
 ```
 
 ### Using Docker Compose
@@ -194,19 +194,19 @@ kubectl get pods --watch
 kubectl get svc
 
 # View pod logs
-kubectl logs -f deployment/autodeploy
+kubectl logs -f deployment/pdeploy
 ```
 
 ### Access the App
 
 **Get the service URL:**
 ```bash
-minikube service autodeploy-service --url
+minikube service pdeploy-service --url
 ```
 
 **Or manually:**
 ```bash
-kubectl port-forward svc/autodeploy-service 8000:80
+kubectl port-forward svc/pdeploy-service 8000:80
 # Now access at http://localhost:8000
 ```
 
@@ -250,7 +250,7 @@ kubectl port-forward -n monitoring svc/prometheus-grafana 3000:80
 
 **Default credentials:**
 - Username: `admin`
-- Password: `autodeploy-admin`
+- Password: `pdeploy-admin`
 
 ### Access Prometheus UI
 
@@ -284,7 +284,7 @@ env = os.getenv("ENV", "development")
 ## Project Structure
 
 ```
-autodeploy/
+pdeploy/
 ├── app/
 │   ├── main.py                 # FastAPI application
 │   ├── requirements.txt         # Python dependencies
@@ -356,7 +356,7 @@ docker image prune -a
 docker system prune -a
 
 # Rebuild without cache
-docker build --no-cache -t autodeploy:latest .
+docker build --no-cache -t pdeploy:latest .
 ```
 
 ### Minikube Issues
@@ -386,6 +386,6 @@ minikube logs
 
 ## Getting Help
 
-- **GitHub Issues:** https://github.com/speedprav/autodeploy/issues
+- **GitHub Issues:** https://github.com/speedprav/pdeploy/issues
 - **Documentation:** See other files in `/docs`
 - **API Docs:** Run app and visit http://localhost:8000/docs

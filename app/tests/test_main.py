@@ -16,6 +16,7 @@ def test_home_returns_200():
     """Root endpoint must return a friendly landing page"""
     response = client.get("/")
     assert response.status_code == 200
+    assert "PDeploy" in response.text
     assert "Production CI/CD API, running live." in response.text
     assert "interview-questions.pdf" not in response.text
 
@@ -42,6 +43,13 @@ def test_health_has_timestamp():
     data = response.json()
     assert "timestamp" in data
 
+def test_health_browser_view_is_polished_html():
+    """Health endpoint should render an HTML status page in browsers"""
+    response = client.get("/health", headers={"accept": "text/html"})
+    assert response.status_code == 200
+    assert "PDeploy Health" in response.text
+    assert "Healthy" in response.text
+
 # ■■ Info Endpoint Tests ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
 def test_info_returns_200():
     """Info endpoint must return HTTP 200 OK"""
@@ -60,7 +68,20 @@ def test_info_correct_project_name():
     """Info endpoint must return correct project name"""
     response = client.get("/info")
     data = response.json()
-    assert data["project"] == "AutoDeploy"
+    assert data["project"] == "PDeploy"
+
+def test_info_browser_view_is_polished_html():
+    """Info endpoint should render an HTML project page in browsers"""
+    response = client.get("/info", headers={"accept": "text/html"})
+    assert response.status_code == 200
+    assert "PDeploy Info" in response.text
+    assert "Project profile" in response.text
+
+def test_docs_returns_pdeploy_swagger_ui():
+    """Docs endpoint should return branded Swagger UI"""
+    response = client.get("/docs")
+    assert response.status_code == 200
+    assert "PDeploy API Docs" in response.text
 
 # ■■ Predict Endpoint Tests ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
 def test_predict_returns_200():

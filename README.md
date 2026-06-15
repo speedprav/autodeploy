@@ -1,7 +1,7 @@
-# AutoDeploy — Production CI/CD Pipeline
+# PDeploy — Production CI/CD Pipeline
 
-[![CI/CD Pipeline](https://img.shields.io/badge/CI%2FCD-Automated-brightgreen)](https://github.com/YOUR_USERNAME/autodeploy/actions)
-[![Docker](https://img.shields.io/badge/Docker-Ready-blue?logo=docker)](https://hub.docker.com/r/YOUR_USERNAME/autodeploy)
+[![CI/CD Pipeline](https://img.shields.io/badge/CI%2FCD-Automated-brightgreen)](https://github.com/YOUR_USERNAME/pdeploy/actions)
+[![Docker](https://img.shields.io/badge/Docker-Ready-blue?logo=docker)](https://hub.docker.com/r/YOUR_USERNAME/pdeploy)
 [![Kubernetes](https://img.shields.io/badge/Kubernetes-Deployed-326CE5?logo=kubernetes)](https://kubernetes.io)
 [![Python](https://img.shields.io/badge/Python-3.11-green?logo=python)](https://python.org)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow)](LICENSE)
@@ -27,7 +27,7 @@ GitHub Push
 ┌──────────────────────────┐
 │    Minikube K8s          │
 │    2x Replicas           │
-│    AutoDeploy            │
+│    PDeploy            │
 └──────────────────────────┘
     ↓        ↓
 ┌──────────────────┐  ┌──────────────────┐
@@ -61,7 +61,7 @@ GitHub Push
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com/YOUR_USERNAME/autodeploy.git && cd autodeploy
+git clone https://github.com/YOUR_USERNAME/pdeploy.git && cd pdeploy
 
 # 2. Start Minikube
 minikube start --driver=docker --cpus=2 --memory=4096
@@ -70,7 +70,7 @@ minikube start --driver=docker --cpus=2 --memory=4096
 kubectl apply -f k8s/
 
 # 4. Get the app URL
-minikube service autodeploy-service --url
+minikube service pdeploy-service --url
 
 # 5. Open in browser and test
 # Navigate to: [URL from step 4]/health
@@ -91,7 +91,7 @@ Access the Grafana dashboard:
 
 ```bash
 kubectl port-forward -n monitoring svc/prometheus-grafana 3000:80
-# Open: http://localhost:3000 (admin / autodeploy-admin)
+# Open: http://localhost:3000 (admin / pdeploy-admin)
 ```
 
 Dashboard panels: HTTP request rate, P95 latency, pod CPU, pod memory.
@@ -99,7 +99,7 @@ Dashboard panels: HTTP request rate, P95 latency, pod CPU, pod memory.
 ## Project Structure
 
 ```
-autodeploy/
+pdeploy/
 ├── app/                          # FastAPI application
 │   ├── main.py                   # Main application code
 │   ├── requirements.txt           # Python dependencies
@@ -145,16 +145,16 @@ See [SETUP.md](SETUP.md) for detailed step-by-step installation instructions.
 
 ```bash
 # Watch deployment rollout
-kubectl rollout status deployment/autodeploy
+kubectl rollout status deployment/pdeploy
 
 # View deployment history
-kubectl rollout history deployment/autodeploy
+kubectl rollout history deployment/pdeploy
 
 # Rollback to previous version
-kubectl rollout undo deployment/autodeploy
+kubectl rollout undo deployment/pdeploy
 
 # Scale replicas
-kubectl scale deployment autodeploy --replicas=4
+kubectl scale deployment pdeploy --replicas=4
 
 # View pod logs
 kubectl logs POD_NAME -f
@@ -181,7 +181,7 @@ Pod starts then immediately crashes
 
 ### Connection refused
 Service not exposed correctly
-- Run: `minikube service autodeploy-service --url`
+- Run: `minikube service pdeploy-service --url`
 - Verify pods are Running: `kubectl get pods`
 
 ## Author

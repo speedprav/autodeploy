@@ -1,14 +1,14 @@
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
-  name: autodeploy-monitor
+  name: pdeploy-monitor
   labels:
     # This label tells Prometheus to pick up this ServiceMonitor
     release: prometheus
 spec:
   selector:
     matchLabels:
-      app: autodeploy # Match our app's service label
+      app: pdeploy # Match our app's service label
   endpoints:
   - port: http # Port name from service.yaml
     path: /metrics # Prometheus scrape endpoint (we add this to FastAPI)

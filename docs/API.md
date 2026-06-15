@@ -1,10 +1,10 @@
-# AutoDeploy API Documentation
+# PDeploy API Documentation
 
 ## Overview
 
-AutoDeploy is a production-grade REST API built with **FastAPI** that demonstrates a complete CI/CD pipeline with sentiment analysis capabilities. The API is instrumented with Prometheus metrics for monitoring.
+PDeploy is a production-grade REST API built with **FastAPI** that demonstrates a complete CI/CD pipeline with sentiment analysis capabilities. The API is instrumented with Prometheus metrics for monitoring.
 
-**Base URL:** `http://localhost:8000` (local) or `https://autodeploy-w7mg.onrender.com` (live)
+**Base URL:** `http://localhost:8000` (local) or `https://pdeploy-w7mg.onrender.com` (live)
 
 ---
 
@@ -41,7 +41,7 @@ GET /health
 {
   "status": "healthy",
   "timestamp": "2026-06-15T07:44:25.753334",
-  "service": "autodeploy-api"
+  "service": "pdeploy-api"
 }
 ```
 
@@ -62,7 +62,7 @@ GET /info
 **Response (200 OK):**
 ```json
 {
-  "project": "AutoDeploy",
+  "project": "PDeploy",
   "version": "1.0.0",
   "author": "Pravinkumar Choudhary",
   "github": "github.com/speedprav",
@@ -318,12 +318,12 @@ app.add_middleware(
 
 ## Live Deployment
 
-**Public API:** https://autodeploy-w7mg.onrender.com
+**Public API:** https://pdeploy-w7mg.onrender.com
 
 ```bash
 # Test live API
-curl https://autodeploy-w7mg.onrender.com/health
-curl https://autodeploy-w7mg.onrender.com/info
+curl https://pdeploy-w7mg.onrender.com/health
+curl https://pdeploy-w7mg.onrender.com/info
 ```
 
 ---
@@ -337,7 +337,7 @@ curl https://autodeploy-w7mg.onrender.com/info
 <script>
 async function predictSentiment() {
   const text = document.getElementById('input').value;
-  const response = await fetch('https://autodeploy-w7mg.onrender.com/predict', {
+  const response = await fetch('https://pdeploy-w7mg.onrender.com/predict', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ text })
@@ -413,6 +413,6 @@ curl -X POST http://localhost:8000/predict \
 
 ## Support
 
-- **Issues:** https://github.com/speedprav/autodeploy/issues
-- **Docs:** https://autodeploy-w7mg.onrender.com/docs
+- **Issues:** https://github.com/speedprav/pdeploy/issues
+- **Docs:** https://pdeploy-w7mg.onrender.com/docs
 - **Author:** Pravinkumar Choudhary

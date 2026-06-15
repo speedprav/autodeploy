@@ -2,7 +2,7 @@
 
 ## System Architecture
 
-AutoDeploy demonstrates a complete, production-grade CI/CD pipeline with automatic testing, containerization, Kubernetes deployment, and monitoring.
+PDeploy demonstrates a complete, production-grade CI/CD pipeline with automatic testing, containerization, Kubernetes deployment, and monitoring.
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -42,8 +42,8 @@ AutoDeploy demonstrates a complete, production-grade CI/CD pipeline with automat
                          ▼
 ┌─────────────────────────────────────────────────────────────────┐
 │                   Docker Registry (Docker Hub)                  │
-│  ├─ Image: speedprav/autodeploy:SHA (versioned)                │
-│  └─ Image: speedprav/autodeploy:latest (current)               │
+│  ├─ Image: speedprav/pdeploy:SHA (versioned)                │
+│  └─ Image: speedprav/pdeploy:latest (current)               │
 └──────────────────────────┬──────────────────────────────────────┘
                            │
                            ▼
@@ -51,7 +51,7 @@ AutoDeploy demonstrates a complete, production-grade CI/CD pipeline with automat
 │                  Kubernetes Cluster (Minikube)                  │
 │                                                                 │
 │  ┌─────────────────────────────────────────────────────┐       │
-│  │  Deployment: autodeploy                             │       │
+│  │  Deployment: pdeploy                             │       │
 │  │  ├─ Replicas: 2 (high availability)                 │       │
 │  │  ├─ Strategy: RollingUpdate                         │       │
 │  │  │  ├─ maxSurge: 1                                  │       │
@@ -69,7 +69,7 @@ AutoDeploy demonstrates a complete, production-grade CI/CD pipeline with automat
 │  └─────────────────────────────────────────────────────┘       │
 │                                                                 │
 │  ┌─────────────────────────────────────────────────────┐       │
-│  │  Service: autodeploy-service (NodePort)             │       │
+│  │  Service: pdeploy-service (NodePort)             │       │
 │  │  ├─ Internal port: 80                               │       │
 │  │  ├─ Container port: 8000                            │       │
 │  │  └─ Node port: 30080 (external access)              │       │
@@ -77,13 +77,13 @@ AutoDeploy demonstrates a complete, production-grade CI/CD pipeline with automat
 │                                                                 │
 │  ┌─────────────────────────────────────────────────────┐       │
 │  │  Ingress: nginx                                     │       │
-│  │  ├─ Host: autodeploy.local                          │       │
+│  │  ├─ Host: pdeploy.local                          │       │
 │  │  ├─ Path: / (prefix match)                          │       │
-│  │  └─ Routes to: autodeploy-service:80                │       │
+│  │  └─ Routes to: pdeploy-service:80                │       │
 │  └─────────────────────────────────────────────────────┘       │
 │                                                                 │
 │  ┌─────────────────────────────────────────────────────┐       │
-│  │  ServiceMonitor: autodeploy (Prometheus discovery)  │       │
+│  │  ServiceMonitor: pdeploy (Prometheus discovery)  │       │
 │  │  ├─ Scrape interval: 15s                            │       │
 │  │  ├─ Metrics path: /metrics                          │       │
 │  │  └─ Labels: release=prometheus                      │       │
@@ -189,7 +189,7 @@ Type: NodePort
 ├─ Service port: 80 (internal)
 ├─ Container port: 8000 (app)
 ├─ Node port: 30080 (external)
-└─ Selector: app=autodeploy (route to pods)
+└─ Selector: app=pdeploy (route to pods)
 
 Usage:
 ├─ Internal: kubectl port-forward
@@ -265,7 +265,7 @@ http_exceptions_total{exception_type}
 
 ```
 1. User Request
-   └─ curl https://autodeploy-w7mg.onrender.com/health
+   └─ curl https://pdeploy-w7mg.onrender.com/health
 
 2. Load Balancer (Render/Ingress)
    └─ Routes to: Service (port 80)
@@ -317,10 +317,10 @@ http_exceptions_total{exception_type}
 
 ```bash
 # Scale to 5 replicas
-kubectl scale deployment autodeploy --replicas=5
+kubectl scale deployment pdeploy --replicas=5
 
 # Auto-scale based on CPU
-kubectl autoscale deployment autodeploy --min=2 --max=10 --cpu-percent=80
+kubectl autoscale deployment pdeploy --min=2 --max=10 --cpu-percent=80
 ```
 
 ### Vertical Scaling

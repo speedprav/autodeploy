@@ -1,6 +1,6 @@
 # Troubleshooting Guide
 
-Common issues and solutions for AutoDeploy.
+Common issues and solutions for PDeploy.
 
 ---
 
@@ -242,19 +242,19 @@ Common issues and solutions for AutoDeploy.
 
 1. Check logs
    ```bash
-   docker run autodeploy:latest
+   docker run pdeploy:latest
    # View error output
    ```
 
 2. Run interactively
    ```bash
-   docker run -it autodeploy:latest bash
+   docker run -it pdeploy:latest bash
    python app/main.py
    ```
 
 3. Verify Dockerfile
    ```bash
-   docker build --no-cache -t autodeploy .
+   docker build --no-cache -t pdeploy .
    ```
 
 ---
@@ -267,7 +267,7 @@ Common issues and solutions for AutoDeploy.
 
 1. Use different port
    ```bash
-   docker run -p 8001:8000 autodeploy:latest
+   docker run -p 8001:8000 pdeploy:latest
    ```
 
 2. Remove stopped containers
@@ -297,7 +297,7 @@ Common issues and solutions for AutoDeploy.
 
 2. Run with sudo
    ```bash
-   sudo docker build -t autodeploy .
+   sudo docker build -t pdeploy .
    ```
 
 ---
@@ -408,13 +408,13 @@ Common issues and solutions for AutoDeploy.
 
 2. Verify image exists locally
    ```bash
-   docker images | grep autodeploy
+   docker images | grep pdeploy
    ```
 
 3. Push to Docker Hub
    ```bash
-   docker tag autodeploy:latest username/autodeploy:latest
-   docker push username/autodeploy:latest
+   docker tag pdeploy:latest username/pdeploy:latest
+   docker push username/pdeploy:latest
    ```
 
 4. Create image pull secret
@@ -436,7 +436,7 @@ Common issues and solutions for AutoDeploy.
 1. Check service running
    ```bash
    kubectl get svc
-   kubectl describe svc autodeploy-service
+   kubectl describe svc pdeploy-service
    ```
 
 2. Get external IP
@@ -446,14 +446,14 @@ Common issues and solutions for AutoDeploy.
 
 3. Port forward for testing
    ```bash
-   kubectl port-forward svc/autodeploy-service 8000:80
+   kubectl port-forward svc/pdeploy-service 8000:80
    curl http://localhost:8000/health
    ```
 
 4. Check service selector matches pod labels
    ```bash
    kubectl get pods --show-labels
-   kubectl get svc autodeploy-service -o yaml | grep selector
+   kubectl get svc pdeploy-service -o yaml | grep selector
    ```
 
 ---
@@ -740,13 +740,13 @@ Common issues and solutions for AutoDeploy.
 
 2. Limit container memory
    ```bash
-   docker run -m 256m autodeploy:latest
+   docker run -m 256m pdeploy:latest
    ```
 
 3. Restart periodically (if needed)
    ```bash
    # In Kubernetes:
-   kubectl set env deployment/autodeploy RESTART_COUNTER=<random>
+   kubectl set env deployment/pdeploy RESTART_COUNTER=<random>
    ```
 
 ---
@@ -783,7 +783,7 @@ app.add_middleware(
 2. Optimize slow queries
 3. Increase deployment timeout
    ```bash
-   kubectl rollout status deployment/autodeploy --timeout=5m
+   kubectl rollout status deployment/pdeploy --timeout=5m
    ```
 
 ---
@@ -798,13 +798,13 @@ If issue persists:
    tail -f app.log
    
    # K8s
-   kubectl logs deployment/autodeploy
+   kubectl logs deployment/pdeploy
    
    # Docker
    docker logs <container-id>
    ```
 
-2. Search GitHub issues: https://github.com/speedprav/autodeploy/issues
+2. Search GitHub issues: https://github.com/speedprav/pdeploy/issues
 
 3. Create new issue with:
    - Error message

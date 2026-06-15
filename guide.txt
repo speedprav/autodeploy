@@ -1,4 +1,4 @@
-■ AutoDeploy
+■ PDeploy
  Production-Grade CI/CD Pipeline
  
  Docker · Minikube · GitHub Actions · Prometheus · Grafana
@@ -48,8 +48,8 @@ SECTION 8 — All AI Prompts Reference
 SECTION 9 — Troubleshooting Guide
 SECTION 1 — Project Overview & Architecture
 What you are building, why it matters, and how it all connects
-What is AutoDeploy?
-AutoDeploy is a fully automated DevOps pipeline that mimics exactly what professional DevOps engineers build
+What is PDeploy?
+PDeploy is a fully automated DevOps pipeline that mimics exactly what professional DevOps engineers build
 at real tech companies. Every time you push code to GitHub, a 4-stage pipeline automatically tests your code,
 packages it into a Docker container, pushes it to a registry, and deploys it to a Kubernetes cluster — all without
 any manual intervention. A monitoring stack then tracks your app health in real time.
@@ -140,7 +140,7 @@ Visualize metrics
 Free
 Project Folder Structure (Final)
 ■ Project Tree
-autodeploy/
+pdeploy/
 ■■■ app/
 ■ ■■■ main.py # FastAPI application
 ■ ■■■ requirements.txt # Python dependencies
@@ -217,10 +217,10 @@ helm version
 Step 6 — GitHub Repository Setup
 1
 Create GitHub Repository
-Go to github.com → New Repository → Name: autodeploy → Public → Create
+Go to github.com → New Repository → Name: pdeploy → Public → Create
 2
 Clone to your machine
-git clone https://github.com/YOUR_USERNAME/autodeploy.git && cd autodeploy
+git clone https://github.com/YOUR_USERNAME/pdeploy.git && cd pdeploy
 3
 Create Docker Hub account
 Go to hub.docker.com → Sign Up → Remember your username (used throughout project)
@@ -253,7 +253,7 @@ import uvicorn
 import random
 # Initialize the FastAPI application
 app = FastAPI(
-title="AutoDeploy API",
+title="PDeploy API",
 description="Production CI/CD demo app for DevOps portfolio",
 version="1.0.0"
 )
@@ -279,7 +279,7 @@ Returns: status and current UTC timestamp
 return {
 "status": "healthy",
 "timestamp": datetime.utcnow().isoformat(),
-"service": "autodeploy-api"
+"service": "pdeploy-api"
 }
 @app.get("/info")
 def get_info():
@@ -288,7 +288,7 @@ Application metadata endpoint.
 Returns: project details and author information
 """
 return {
-"project": "AutoDeploy",
+"project": "PDeploy",
 "version": "1.0.0",
 "author": "Pravinkumar Choudhary",
 "github": "github.com/speedprav",
@@ -390,7 +390,7 @@ def test_info_correct_project_name():
 """Info endpoint must return correct project name"""
 response = client.get("/info")
 data = response.json()
-assert data["project"] == "AutoDeploy"
+assert data["project"] == "PDeploy"
 # ■■ Predict Endpoint Tests ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
 def test_predict_returns_200():
 """Predict endpoint must return HTTP 200 for valid input"""
@@ -520,13 +520,13 @@ k8s/
 3.7 — Step-by-Step Day 1 & 2 Build Guide
 1
 Create project folder structure
-mkdir -p autodeploy/app/tests autodeploy/k8s autodeploy/monitoring autodeploy/.github/workflows
+mkdir -p pdeploy/app/tests pdeploy/k8s pdeploy/monitoring pdeploy/.github/workflows
 2
 Create all files
 Copy every file from Section 3.1 to 3.6 into the correct paths shown in the filename header
 3
 Create Python virtual environment
-cd autodeploy && python -m venv venv && source venv/bin/activate (Windows: venv\Scripts\activate)
+cd pdeploy && python -m venv venv && source venv/bin/activate (Windows: venv\Scripts\activate)
 4
 Install dependencies
 pip install -r app/requirements.txt
@@ -538,16 +538,16 @@ Run app locally
 uvicorn main:app --reload — Open http://localhost:8000/health in browser
 7
 Build Docker image
-docker build -t YOUR_DOCKERHUB_USERNAME/autodeploy:latest .
+docker build -t YOUR_DOCKERHUB_USERNAME/pdeploy:latest .
 8
 Run container locally
-docker run -p 8000:8000 YOUR_DOCKERHUB_USERNAME/autodeploy:latest
+docker run -p 8000:8000 YOUR_DOCKERHUB_USERNAME/pdeploy:latest
 9
 Test the running container
 Open http://localhost:8000/health — should return {status: healthy}
 10
 Login and push to Docker Hub
-docker login && docker push YOUR_DOCKERHUB_USERNAME/autodeploy:latest
+docker login && docker push YOUR_DOCKERHUB_USERNAME/pdeploy:latest
 11
 Commit to GitHub
 git add . && git commit -m 'Day 2: FastAPI app + Docker' && git push
@@ -555,14 +555,14 @@ git add . && git commit -m 'Day 2: FastAPI app + Docker' && git push
 ■ http://localhost:8000/health returns {status: healthy}
 ■ http://localhost:8000/info returns project metadata
 ■ docker ps shows your container running
-■ Docker Hub shows your image at hub.docker.com/r/YOUR_USERNAME/autodeploy
+■ Docker Hub shows your image at hub.docker.com/r/YOUR_USERNAME/pdeploy
 ■ GitHub shows all files committed
 SECTION 4 — Days 3–4: Kubernetes with Minikube
 Deploy your container to a local Kubernetes cluster and learn K8s operations
 Goal: By end of Day 4, your app runs inside Minikube with 2 replicas, you can trigger a rolling update, verify
 zero-downtime deployment, and roll back if needed.
 ■ AI PROMPT — Day 3 — Kubernetes Manifests
-I have a Docker image YOUR_USERNAME/autodeploy:latest on Docker Hub. Generate: deployment.yaml with 2
+I have a Docker image YOUR_USERNAME/pdeploy:latest on Docker Hub. Generate: deployment.yaml with 2
 replicas and resource limits, service.yaml NodePort, and ingress.yaml. Add liveness and readiness probes pointing
 to /health. Explain every field in the YAML with inline comments.
 4.1 — Complete deployment.yaml
@@ -570,14 +570,14 @@ to /health. Explain every field in the YAML with inline comments.
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-name: autodeploy # Name of this deployment
+name: pdeploy # Name of this deployment
 labels:
-app: autodeploy # Label used to identify related resources
+app: pdeploy # Label used to identify related resources
 spec:
 replicas: 2 # Run 2 identical pods for high availability
 selector:
 matchLabels:
-app: autodeploy # This deployment manages pods with this label
+app: pdeploy # This deployment manages pods with this label
 strategy:
 type: RollingUpdate # Update pods one at a time (zero downtime)
 rollingUpdate:
@@ -586,11 +586,11 @@ maxUnavailable: 0 # Never take a pod offline before new one is ready
 template:
 metadata:
 labels:
-app: autodeploy # Pods get this label
+app: pdeploy # Pods get this label
 spec:
 containers:
-- name: autodeploy
-image: YOUR_DOCKERHUB_USERNAME/autodeploy:latest
+- name: pdeploy
+image: YOUR_DOCKERHUB_USERNAME/pdeploy:latest
 imagePullPolicy: Always # Always pull latest image
 ports:
 - containerPort: 8000 # Port your FastAPI app listens on
@@ -627,12 +627,12 @@ value: "production"
 apiVersion: v1
 kind: Service
 metadata:
-name: autodeploy-service # Name of this service
+name: pdeploy-service # Name of this service
 spec:
 type: NodePort # Exposes the service on each Node's IP at a static port
 # This lets us access it from outside the cluster
 selector:
-app: autodeploy # Route traffic to pods with this label
+app: pdeploy # Route traffic to pods with this label
 ports:
 - protocol: TCP
 port: 80 # Port the service listens on inside the cluster
@@ -643,20 +643,20 @@ nodePort: 30080 # External port on the Minikube node (30000-32767)
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-name: autodeploy-ingress
+name: pdeploy-ingress
 annotations:
 # Use nginx ingress controller
 nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
 rules:
-- host: autodeploy.local # Local hostname (add to /etc/hosts)
+- host: pdeploy.local # Local hostname (add to /etc/hosts)
 http:
 paths:
 - path: /
 pathType: Prefix
 backend:
 service:
-name: autodeploy-service
+name: pdeploy-service
 port:
 number: 80
 4.4 — Step-by-Step Kubernetes Guide
@@ -677,22 +677,22 @@ Watch pods start up
 kubectl get pods --watch — Wait until STATUS shows Running for both pods
 6
 Get the app URL
-minikube service autodeploy-service --url — Copy this URL and open in browser
+minikube service pdeploy-service --url — Copy this URL and open in browser
 7
 Test your app on Kubernetes
 Open URL/health in browser — should return {status: healthy}
 8
 Practice rolling update
-kubectl set image deployment/autodeploy autodeploy=YOUR_USERNAME/autodeploy:v2
+kubectl set image deployment/pdeploy pdeploy=YOUR_USERNAME/pdeploy:v2
 9
 Watch the rollout
-kubectl rollout status deployment/autodeploy
+kubectl rollout status deployment/pdeploy
 10
 Practice rollback
-kubectl rollout undo deployment/autodeploy
+kubectl rollout undo deployment/pdeploy
 11
 Practice scaling
-kubectl scale deployment autodeploy --replicas=4 then back to --replicas=2
+kubectl scale deployment pdeploy --replicas=4 then back to --replicas=2
 Key kubectl Commands Cheat Sheet
 ■ kubectl Quick Reference
 # Cluster info
@@ -708,18 +708,18 @@ kubectl logs -f POD_NAME # Follow live logs
 kubectl exec -it POD_NAME -- /bin/bash # Shell into pod
 # Deployment management
 kubectl get deployments # List deployments
-kubectl rollout status deployment/autodeploy # Watch rollout progress
-kubectl rollout history deployment/autodeploy # See rollout history
-kubectl rollout undo deployment/autodeploy # Rollback to previous version
+kubectl rollout status deployment/pdeploy # Watch rollout progress
+kubectl rollout history deployment/pdeploy # See rollout history
+kubectl rollout undo deployment/pdeploy # Rollback to previous version
 # Service management
 kubectl get services # List services
-minikube service autodeploy-service --url # Get accessible URL
+minikube service pdeploy-service --url # Get accessible URL
 # Apply / delete
 kubectl apply -f k8s/ # Apply all manifests in folder
 kubectl delete -f k8s/ # Delete all resources
 # Debugging
 kubectl get events --sort-by=.metadata.creationTimestamp # Recent events
-kubectl describe deployment autodeploy # Deployment details
+kubectl describe deployment pdeploy # Deployment details
 ■ minikube status shows Running
 ■ kubectl get pods shows 2 pods with STATUS: Running
 ■ Browser URL/health returns {status: healthy}
@@ -737,7 +737,7 @@ sequence. Use GitHub Secrets DOCKERHUB_USERNAME and DOCKERHUB_TOKEN. Deploy only
 branch push. Add detailed comments explaining every step.
 5.1 — Complete deploy.yml — Full CI/CD Pipeline
 ■ .github/workflows/deploy.yml
-name: AutoDeploy CI/CD Pipeline
+name: PDeploy CI/CD Pipeline
 # ■■ Trigger
 ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
 on:
@@ -747,8 +747,8 @@ pull_request:
 branches: [ main ] # Also run on PRs (test + build only, not deploy)
 # ■■ Environment Variables ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
 env:
-DOCKER_IMAGE: ${{ secrets.DOCKERHUB_USERNAME }}/autodeploy
-DEPLOYMENT_NAME: autodeploy
+DOCKER_IMAGE: ${{ secrets.DOCKERHUB_USERNAME }}/pdeploy
+DEPLOYMENT_NAME: pdeploy
 # ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
 ■■■■■
 # JOB 1: TEST
@@ -902,7 +902,7 @@ https://github.com/actions/runner/releases/download/v2.311.0/actions-runner-linu
 tar xzf ./actions-runner-linux-x64-2.311.0.tar.gz
 4
 Configure runner
-./config.sh --url https://github.com/YOUR_USERNAME/autodeploy --token
+./config.sh --url https://github.com/YOUR_USERNAME/pdeploy --token
 YOUR_TOKEN_FROM_GITHUB
 5
 Start runner as background service
@@ -945,7 +945,7 @@ default login credentials. Also show me how to verify Prometheus is running and 
 # This customizes the default Prometheus + Grafana installation
 grafana:
 # Change default admin password (use a strong password in production)
-adminPassword: "autodeploy-admin"
+adminPassword: "pdeploy-admin"
 # Grafana service configuration
 service:
 type: NodePort # Expose Grafana via Minikube NodePort
@@ -988,14 +988,14 @@ cpu: "100m"
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
-name: autodeploy-monitor
+name: pdeploy-monitor
 labels:
 # This label tells Prometheus to pick up this ServiceMonitor
 release: prometheus
 spec:
 selector:
 matchLabels:
-app: autodeploy # Match our app's service label
+app: pdeploy # Match our app's service label
 endpoints:
 - port: http # Port name from service.yaml
 path: /metrics # Prometheus scrape endpoint (we add this to FastAPI)
@@ -1035,7 +1035,7 @@ minikube service prometheus-grafana --namespace monitoring --url
 # OR use port-forward:
 kubectl port-forward -n monitoring svc/prometheus-grafana 3000:80
 # Then open: http://localhost:3000
-# Login: admin / autodeploy-admin
+# Login: admin / pdeploy-admin
 # Step 6: Apply ServiceMonitor
 kubectl apply -f k8s/servicemonitor.yaml
 # Step 7: Verify Prometheus is scraping your app
@@ -1056,7 +1056,7 @@ ion_seconds_bucket[5m]))
 Time series graph
 Pod CPU Usage
 rate(container_cpu_usage_seconds_total{pod=~'
-autodeploy.*'}[5m])
+pdeploy.*'}[5m])
 Gauge
 Pod Memory Usage
 container_memory_usage_bytes{pod=~'autodepl
@@ -1069,25 +1069,25 @@ Error Rate
 rate(http_requests_total{status=~'5..'}[5m])
 Time series graph
 ■ kubectl get pods -n monitoring shows all pods Running
-■ Grafana login works at http://localhost:3000 (admin/autodeploy-admin)
-■ Prometheus targets page shows autodeploy app as UP
+■ Grafana login works at http://localhost:3000 (admin/pdeploy-admin)
+■ Prometheus targets page shows pdeploy app as UP
 ■ /metrics endpoint on your FastAPI app returns Prometheus metrics
 ■ Grafana dashboard shows live request rate data
 ■ Alert rule created for pod CrashLoopBackOff
 SECTION 7 — Days 11–14: Polish, README & Resume
 Make your project portfolio-ready and interview-proof
 ■ AI PROMPT — Day 11 — README Generation
-Write a professional GitHub README.md for my AutoDeploy project. Include: title with badges, one-line description,
+Write a professional GitHub README.md for my PDeploy project. Include: title with badges, one-line description,
 Mermaid architecture diagram, tech stack table, 6 key features, prerequisites, 5-command quick start, CI/CD
 pipeline explanation, monitoring section, project structure tree, and author section. Make it impressive enough to get
 noticed by a DevOps hiring manager in India.
 7.1 — Complete README.md
 ■ README.md
-# ■ AutoDeploy — Production CI/CD Pipeline
-[![CI/CD Pipeline](https://github.com/YOUR_USERNAME/autodeploy/workflows/AutoDeploy%20CI%2FCD%20
-Pipeline/badge.svg)](https://github.com/YOUR_USERNAME/autodeploy/actions)
+# ■ PDeploy — Production CI/CD Pipeline
+[![CI/CD Pipeline](https://github.com/YOUR_USERNAME/pdeploy/workflows/PDeploy%20CI%2FCD%20
+Pipeline/badge.svg)](https://github.com/YOUR_USERNAME/pdeploy/actions)
 [![Docker](https://img.shields.io/badge/Docker-Ready-blue?logo=docker)](https://hub.docker.com/r
-/YOUR_USERNAME/autodeploy)
+/YOUR_USERNAME/pdeploy)
 [![Kubernetes](https://img.shields.io/badge/Kubernetes-Deployed-326CE5?logo=kubernetes)](https:/
 /kubernetes.io)
 [![Python](https://img.shields.io/badge/Python-3.11-green?logo=python)](https://python.org)
@@ -1112,7 +1112,7 @@ GitHub Push
 ■■■■■■■■■■■■■■■■■■
 ■ Minikube K8s ■
 ■ 2x Replicas ■
-■ AutoDeploy ■
+■ PDeploy ■
 ■■■■■■■■■■■■■■■■■■
 ■
 ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
@@ -1142,13 +1142,13 @@ GitHub Push
 ## ■ Quick Start
 ```bash
 # 1. Clone the repository
-git clone https://github.com/YOUR_USERNAME/autodeploy.git && cd autodeploy
+git clone https://github.com/YOUR_USERNAME/pdeploy.git && cd pdeploy
 # 2. Start Minikube
 minikube start --driver=docker
 # 3. Deploy to Kubernetes
 kubectl apply -f k8s/
 # 4. Get the app URL
-minikube service autodeploy-service --url
+minikube service pdeploy-service --url
 # 5. Open in browser
 # Navigate to: [URL from step 4]/health
 ```
@@ -1163,12 +1163,12 @@ minikube service autodeploy-service --url
 Access the Grafana dashboard:
 ```bash
 kubectl port-forward -n monitoring svc/prometheus-grafana 3000:80
-# Open: http://localhost:3000 (admin / autodeploy-admin)
+# Open: http://localhost:3000 (admin / pdeploy-admin)
 ```
 Dashboard panels: HTTP request rate, P95 latency, pod CPU, pod memory.
 ## ■ Project Structure
 ```
-autodeploy/
+pdeploy/
 ■■■ app/ # FastAPI application
 ■ ■■■ main.py
 ■ ■■■ requirements.txt
@@ -1199,7 +1199,7 @@ Bullet 3 — Monitoring
  Implemented production observability stack using Prometheus and Grafana with custom FastAPI metrics
 endpoint, 6-panel live dashboard, and automated pod crash alerting
 30-Second Verbal Pitch
-"I built AutoDeploy, a production CI/CD pipeline where every git push automatically runs tests, builds a Docker
+"I built PDeploy, a production CI/CD pipeline where every git push automatically runs tests, builds a Docker
 container, pushes it to a registry, and deploys it to Kubernetes — all in under 3 minutes with zero manual
 steps. I added Prometheus and Grafana for live monitoring with alerts. The whole thing runs free using
 Minikube and GitHub Actions. It demonstrates the exact DevOps workflow used in professional engineering
@@ -1211,15 +1211,15 @@ I am setting up my development environment for a DevOps project on [Windows/Mac/
 Desktop, Minikube, kubectl, Python 3.10+, Git, and VS Code. Give me step-by-step installation commands for my
 OS, how to verify each tool works, and common errors to watch for during installation.
 ■ AI PROMPT — Day 1 — FastAPI Application
-I am building a DevOps portfolio project called AutoDeploy. Generate a Python FastAPI app with: GET /health
+I am building a DevOps portfolio project called PDeploy. Generate a Python FastAPI app with: GET /health
 (status+timestamp), GET /info (project metadata), POST /predict (mock NLP). Include complete main.py,
 requirements.txt, and tests/test_main.py with pytest. Add detailed comments explaining every line.
 ■ AI PROMPT — Day 2 — Dockerfile + Docker Compose
 I have a Python FastAPI app. Give me: a production Dockerfile using python:3.11-slim with multi-stage build and
 non-root user, a docker-compose.yml, a .dockerignore, and step-by-step commands to build/run/test/push to Docker
-Hub as [USERNAME]/autodeploy.
+Hub as [USERNAME]/pdeploy.
 ■ AI PROMPT — Day 3 — Kubernetes Manifests
-I have Docker image [USERNAME]/autodeploy:latest on Docker Hub. Give me complete Kubernetes YAML files:
+I have Docker image [USERNAME]/pdeploy:latest on Docker Hub. Give me complete Kubernetes YAML files:
 deployment.yaml (2 replicas, resource limits, liveness+readiness probes), service.yaml (NodePort), ingress.yaml.
 Include kubectl commands to deploy and get the app URL. Explain each Kubernetes concept in simple terms.
 ■ AI PROMPT — Day 4 — Kubectl Operations
@@ -1254,21 +1254,21 @@ Prometheus is scraping my FastAPI app. Create a Grafana dashboard with 4 panels:
 latency, pod CPU usage, pod memory. Give me the exact PromQL queries. Also set up an alert rule for
 CrashLoopBackOff and show how to export dashboard JSON for GitHub.
 ■ AI PROMPT — Day 11 — README.md
-Write a professional GitHub README.md for AutoDeploy: Python FastAPI + Docker + Kubernetes (Minikube) +
+Write a professional GitHub README.md for PDeploy: Python FastAPI + Docker + Kubernetes (Minikube) +
 GitHub Actions + Prometheus + Grafana. Include: title with badges, Mermaid architecture diagram, tech stack table,
 6 features, prerequisites, 5-command quick start, pipeline explanation, monitoring section, project tree, author
 section with LinkedIn+GitHub.
 ■ AI PROMPT — Day 13 — Code Review + Cleanup
-Review my AutoDeploy project files: [paste main.py, deploy.yml, deployment.yaml]. Check for: security issues
+Review my PDeploy project files: [paste main.py, deploy.yml, deployment.yaml]. Check for: security issues
 (hardcoded creds, exposed ports), K8s and Docker best practice violations, missing error handling, performance
 improvements. Give improved version with explanations for every change.
 ■ AI PROMPT — Day 14 — Resume + LinkedIn
-I completed AutoDeploy: FastAPI + Docker + GitHub Actions (4 jobs) + Kubernetes (Minikube) + Prometheus +
+I completed PDeploy: FastAPI + Docker + GitHub Actions (4 jobs) + Kubernetes (Minikube) + Prometheus +
 Grafana. Give me: 3 resume bullet points (strong verbs, specific numbers), LinkedIn post (150 words), 3 interview
 questions with model answers, 30-second verbal pitch. I am a BCA student targeting Cloud/DevOps internships in
 India.
 ■ AI PROMPT — Any Day — Universal Error Fix
-I am building AutoDeploy on Day [X]. I ran this command: [paste command]. I got this error: [paste full error
+I am building PDeploy on Day [X]. I ran this command: [paste command]. I got this error: [paste full error
 message]. My OS is [Windows/Mac/Linux]. Here is my relevant file: [paste file]. Please: 1) explain what this error
 means, 2) give me the exact fix with commands, 3) tell me how to verify the fix worked.
 SECTION 9 — Troubleshooting Guide
@@ -1283,7 +1283,7 @@ Fix: 1. Check logs: kubectl logs POD_NAME --previous 2. Usually a Python error i
 run YOUR_IMAGE and check output 4. Verify requirements.txt has all dependencies
 ■ Connection refused / Cannot access app URL
 Cause: Service not exposed correctly or Minikube networking issue
-Fix: 1. Run: minikube service autodeploy-service --url 2. Verify service: kubectl get services 3. Check pod is Running:
+Fix: 1. Run: minikube service pdeploy-service --url 2. Verify service: kubectl get services 3. Check pod is Running:
 kubectl get pods 4. Try: minikube tunnel (in separate terminal)
 ■ Pipeline: Error: kubectl command not found
 Cause: kubectl not available on GitHub Actions runner
@@ -1311,7 +1311,7 @@ Be ready for every question a DevOps interviewer will ask about this project
 Q: What is CI/CD and how does your pipeline implement it?
 A: CI stands for Continuous Integration — every code push is automatically tested before merging, catching bugs early. CD
 stands for Continuous Deployment — code that passes all tests is automatically deployed without manual steps. In
-AutoDeploy, my pipeline has 4 jobs that run in sequence on every git push to main: first pytest runs all tests, then Docker
+PDeploy, my pipeline has 4 jobs that run in sequence on every git push to main: first pytest runs all tests, then Docker
 builds the image, then it pushes to Docker Hub with both a latest tag and a unique commit SHA tag, then kubectl updates
 the Kubernetes deployment with the new image. If any job fails, the pipeline stops immediately and nothing gets deployed.
 This eliminates human error and ensures only tested code ever reaches the running application.
@@ -1326,7 +1326,7 @@ Q: What happens if your deployment fails mid-rollout?
 A: Kubernetes handles this automatically with my configuration. I set maxUnavailable to 0 in the rolling update strategy,
 which means Kubernetes never takes a pod offline until the new pod is confirmed healthy by the readiness probe. If the
 new pod fails its readiness check, Kubernetes stops the rollout and keeps the old pods running — so users never see
-downtime. I can also manually trigger a rollback with kubectl rollout undo deployment/autodeploy, which instantly reverts to
+downtime. I can also manually trigger a rollback with kubectl rollout undo deployment/pdeploy, which instantly reverts to
 the previous known-good image. The rollout history command shows all previous deployments, so I can roll back to any
 specific version.
 Q: How does your monitoring stack work?

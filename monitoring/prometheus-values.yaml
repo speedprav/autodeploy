@@ -3,7 +3,7 @@
 
 grafana:
   # Change default admin password (use a strong password in production)
-  adminPassword: "autodeploy-admin"
+  adminPassword: "pdeploy-admin"
   # Grafana service configuration
   service:
     type: NodePort # Expose Grafana via Minikube NodePort
