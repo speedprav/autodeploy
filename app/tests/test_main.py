@@ -16,14 +16,13 @@ def test_home_returns_200():
     """Root endpoint must return a friendly landing page"""
     response = client.get("/")
     assert response.status_code == 200
-    assert "AutoDeploy API is live" in response.text
+    assert "Production CI/CD API, running live." in response.text
+    assert "interview-questions.pdf" not in response.text
 
-def test_interview_pdf_download_returns_pdf():
-    """Interview PDF endpoint must return the generated PDF asset"""
+def test_interview_pdf_download_is_not_public():
+    """Interview PDF must not be exposed on the live website"""
     response = client.get("/interview-questions.pdf")
-    assert response.status_code == 200
-    assert response.headers["content-type"] == "application/pdf"
-    assert response.content.startswith(b"%PDF")
+    assert response.status_code == 404
 
 # ■■ Health Endpoint Tests ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
 def test_health_returns_200():
