@@ -40,7 +40,7 @@ EXPOSE 8000
 
 # Health check — Docker will run this every 30s to verify the container is healthy
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-    CMD-SHELL python -c "import os, urllib.request; urllib.request.urlopen(f'http://localhost:{os.environ.get(\"PORT\", \"8000\")}/health')"
+    CMD python -c "import os, urllib.request; urllib.request.urlopen('http://localhost:%s/health' % os.environ.get('PORT', '8000'))"
 
 # Start the application
 # --host 0.0.0.0 makes it accessible from outside the container
