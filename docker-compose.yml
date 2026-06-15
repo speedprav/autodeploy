@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  api:
+    # Build the image from our Dockerfile
+    build:
+      context: .
+      dockerfile: Dockerfile
+    # Map host port 8000 to container port 8000
+    ports:
+      - "8000:8000"
+    # Mount app folder for live code reloading during development
+    volumes:
+      - ./app:/app
+    # Environment variables
+    environment:
+      - ENV=development
+    # Restart policy: always restart unless manually stopped
+    restart: unless-stopped
+    # Health check configuration
+    healthcheck:
+      test: ["CMD", "python", "-c",
+             "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s

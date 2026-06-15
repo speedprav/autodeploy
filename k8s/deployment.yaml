@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: autodeploy # Name of this deployment
+  labels:
+    app: autodeploy # Label used to identify related resources
+spec:
+  replicas: 2 # Run 2 identical pods for high availability
+  selector:
+    matchLabels:
+      app: autodeploy # This deployment manages pods with this label
+  strategy:
+    type: RollingUpdate # Update pods one at a time (zero downtime)
+    rollingUpdate:
+      maxSurge: 1 # Allow 1 extra pod during update
+      maxUnavailable: 0 # Never take a pod offline before new one is ready
+  template:
+    metadata:
+      labels:
+        app: autodeploy # Pods get this label
+    spec:
+      containers:
+      - name: autodeploy
+        image: YOUR_DOCKERHUB_USERNAME/autodeploy:latest
+        imagePullPolicy: Always # Always pull latest image
+        ports:
+        - containerPort: 8000 # Port your FastAPI app listens on
+        # Resource limits — prevents one pod from consuming all node resources
+        resources:
+          requests:
+            memory: "64Mi" # Minimum memory to reserve
+            cpu: "100m" # 100 millicores = 0.1 CPU core
+          limits:
+            memory: "128Mi" # Maximum memory allowed
+            cpu: "200m" # Maximum CPU allowed
+        # Liveness probe — if this fails, Kubernetes restarts the pod
+        livenessProbe:
+          httpGet:
+            path: /health # Calls our /health endpoint
+            port: 8000
+          initialDelaySeconds: 10 # Wait 10s before first check
+          periodSeconds: 30 # Check every 30 seconds
+          failureThreshold: 3 # Restart after 3 consecutive failures
+        # Readiness probe — if this fails, pod is removed from load balancer
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8000
+          initialDelaySeconds: 5
+          periodSeconds: 10
+          failureThreshold: 3
+        # Environment variables inside the container
+        env:
+        - name: ENV
+          value: "production"

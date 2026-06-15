@@ -1,0 +1,45 @@
+# Helm values for kube-prometheus-stack
+# This customizes the default Prometheus + Grafana installation
+
+grafana:
+  # Change default admin password (use a strong password in production)
+  adminPassword: "autodeploy-admin"
+  # Grafana service configuration
+  service:
+    type: NodePort # Expose Grafana via Minikube NodePort
+    nodePort: 30300 # Access on port 30300
+  # Pre-configure Prometheus as a data source
+  additionalDataSources:
+  - name: Prometheus
+    type: prometheus
+    url: http://prometheus-operated:9090
+    access: proxy
+    isDefault: true
+
+prometheus:
+  prometheusSpec:
+    # How long to keep metrics data
+    retention: 7d
+    # Resource limits for Prometheus pod
+    resources:
+      requests:
+        memory: "256Mi"
+        cpu: "100m"
+      limits:
+        memory: "512Mi"
+        cpu: "200m"
+    # Which ServiceMonitors to pick up (match all namespaces)
+    serviceMonitorSelectorNilUsesHelmValues: false
+    serviceMonitorSelector: {}
+    serviceMonitorNamespaceSelector: {}
+
+alertmanager:
+  # Keep Alertmanager simple for local development
+  alertmanagerSpec:
+    resources:
+      requests:
+        memory: "64Mi"
+        cpu: "50m"
+      limits:
+        memory: "128Mi"
+        cpu: "100m"

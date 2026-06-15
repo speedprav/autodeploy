@@ -1,0 +1,19 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: autodeploy-ingress
+  annotations:
+    # Use nginx ingress controller
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  rules:
+  - host: autodeploy.local # Local hostname (add to /etc/hosts)
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: autodeploy-service
+            port:
+              number: 80
